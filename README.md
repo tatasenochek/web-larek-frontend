@@ -1,4 +1,5 @@
 # Проектная работа "Веб-ларек"
+ссылка на репозиторий: https://github.com/tatasenochek/web-larek-frontend.git
 
 Стек: HTML, SCSS, TS, Webpack
 
