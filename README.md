@@ -44,12 +44,21 @@ yarn build
 
 ## Данные и типы данных используемые в приложении
 
-Главная страница
+Состояние приложения
 ```
 export interface IAppMain {
-  basket: number;
+  basket: IBasket[];
   cardsList: ICard[];
   preview: string | null;
+  order: IOrder | null;
+}
+```
+
+Данные главной страницы 
+```
+interface IPage {
+  counter: number;
+  catalog: HTMLElement[];
 }
 ```
 
@@ -72,6 +81,7 @@ export interface IOrder {
   address: string;
   email: string;
   phone: string;
+  cardsId: string[];
 }
 ```
 
@@ -79,8 +89,7 @@ export interface IOrder {
 ```
 export interface IBasket {
   quantity: number;
-  title: string;
-  price: number;
+  cardsList: ICard[];
   totalPrice: number;
 }
 ```
@@ -90,35 +99,28 @@ export interface IBasket {
 type FormErrors = Partial<Record<keyof IOrder, string>>;
 ```
 
-Данные корзины, которые отображаются на главной странице
+Вадидация формы
 ```
-export type TBasketPablicInfo = Pick<IBasket, 'quantity'>;
-```
-
-Данные товара, которые отображаются на главной странице
-```
-export type TCardPablicInfo = Pick<ICard, '_id' | 'image' | 'title' | 'category' | 'price'>;
+interface IFormValidation {
+  valid: boolean;
+  errors: string[];
+}
 ```
 
-Данные товара, которые отображаются в модальном окно карточки
+Модальное окно
 ```
-export type TCardInfo = Pick<ICard, '_id' | 'description' | 'image' | 'title' | 'category' | 'price'>;
-```
-
-Данные товара, которые отображаются модальном окне корзины
-```
-export type TBasketInfo = Pick<IBasket, 'title' | 'price' | 'totalPrice'>;
+interface IModal {
+  content: HTMLElement;
+}
 ```
 
-Данные пользователя, которые  можно редактировать в модальном окне оформления заказа
+Успешный заказ
 ```
-export type TUserCheckout = Pick<IOrder, 'payment' | 'address' | 'email' | 'phone'>;
+interface ISuccess {
+  total: number;
+}
 ```
 
-Данные товара, которые отображаются в модальном окне успешного завершения заказа
-```
-export type TUserCheckoutComplieted = Pick<IBasket, 'totalPrice'>;
-```
 
 ## Архитектура приложения
 
