@@ -1,3 +1,10 @@
+//Главная страница
+export interface IAppMain {
+  basket: IBasket;
+  cardsList: ICard[]
+  preview: string | null;
+}
+
 // Товар
 export interface ICard {
   _id: string;
@@ -8,8 +15,8 @@ export interface ICard {
   price: number | null;
 }
 
-// Данные пользователя
-export interface IUser {
+// Данные заказа
+export interface IOrder {
   payment: boolean;
   address: string;
   email: string;
@@ -24,26 +31,38 @@ export interface IBasket {
   totalPrice: number;
 }
 
-// Каталог товаров
-export interface ICardsData {
-  cards: ICard[];
-  preview: string | null;
-  addBasket(cardId: string, payload: Function | null): void;
-  deleteProduct(cardId: string, payload: Function | null): void;
+// API
+export interface IApi {
+  getCardList: () => Promise<ICard[]>;
+  getCardItem: (id: string) => Promise<ICard>;
 }
 
-// Модель хранения данных пользователя
-export interface IUserData {
-  getUserInfo(): TUserCheckout;
-  setUserInfo(userData: IUser): void;
-  checkValidation(data: Record<keyof TUserCheckout, boolean | string | number>): boolean;
+interface IModalData {
+  content: HTMLElement;
 }
 
-// Модель хранения данных корзины
-export interface IBasketData {
-  cards: ICard[];
-  deleteProduct(cardId: string, payload: Function | null): void;
+interface IFormState {
+  valid: boolean;
+  errors: string[];
 }
+
+interface ISuccess {
+  total: number;
+}
+
+interface IPage {
+  counter: number;
+  catalog: HTMLElement[];
+  locked: boolean;
+}
+
+interface ICardActions {
+  onClick: (event: MouseEvent) => void;
+}
+
+
+// Ошибки полей формы 
+export type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 // Корзина на главной странице
 export type TBasketPablicInfo = Pick<IBasket, 'quantity'>;
@@ -58,7 +77,7 @@ export type TCardInfo = Pick<ICard, '_id' | 'description' | 'image' | 'title' | 
 export type TBasketInfo = Pick<IBasket, 'title' | 'price' | 'totalPrice'>;
 
 // Модальные окна оформления заказа
-export type TUserCheckout = Pick<IUser, 'payment' | 'address' | 'email' | 'phone'>;
+export type TUserCheckout = Pick<IOrder, 'payment' | 'address' | 'email' | 'phone'>;
 
 // Модальное окно успешного завершения заказа
 export type TUserCheckoutComplieted = Pick<IBasket, 'totalPrice'>;
