@@ -60,7 +60,6 @@ interface ICardActions {
   onClick: (event: MouseEvent) => void;
 }
 
-
 // Ошибки полей формы 
 export type FormErrors = Partial<Record<keyof IOrder, string>>;
 
