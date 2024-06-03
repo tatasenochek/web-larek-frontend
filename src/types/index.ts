@@ -1,19 +1,20 @@
-//Главная страница
-export interface IAppMain {
+// Приложение
+export interface ILarekApp {
   basket: IBasket[];
-  cardsList: ICard[]
+  cardsList: ICardItem[];
   preview: string | null;
   order: IOrder | null;
 }
 
 // Товар
-export interface ICard {
+export interface ICardItem {
   _id: string;
   description: string;
   image: string;
   title: string;
   category: string;
   price: number | null;
+  inBasket: boolean;
 }
 
 // Данные заказа
