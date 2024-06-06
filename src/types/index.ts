@@ -8,7 +8,7 @@ export interface ILarekApp {
 
 // Товар
 export interface ICardItem {
-  _id: string;
+  id: string;
   description: string;
   image: string;
   title: string;
@@ -19,11 +19,12 @@ export interface ICardItem {
 
 // Данные заказа
 export interface IOrder {
-  payment: boolean;
+  payment: string;
   address: string;
   email: string;
   phone: string;
-  cardsId: string[];
+  total: number;
+  id: string[];
 }
 
 // Корзина
@@ -33,3 +34,5 @@ export interface IBasket {
   price: number;
   totalPrice: number;
 }
+
+export type FormErrors = Partial<Record<keyof IOrder, string>>;
