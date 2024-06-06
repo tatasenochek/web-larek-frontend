@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { FormErrors, ICardItem, ILarekApp, IOrder } from "../types";
 import { Model } from "./base/Model";
 
@@ -29,7 +28,7 @@ export class AppData extends Model<ILarekApp> {
 
   // добавить товар в корзину
   addBasket(value: ICardItem) {
-    if (this.basket.indexOf(value) < 0) {
+    if (!this.basket.some(item => item.id === value.id)) {
       this.basket.push(value);
       this.emitChanges('basket:changed', this.basket);
     }
@@ -49,11 +48,7 @@ export class AppData extends Model<ILarekApp> {
 
   // сумма всех товаров в корзине
   getTotalPrice() {
-    let total = 0;
-    this.basket.forEach((item) => {
-      total += item.price;
-    });
-    return total;
+    return this.basket.reduce((total, item) => total + item.price, 0);
   }
 
   // каталог товаров
@@ -122,6 +117,7 @@ export class AppData extends Model<ILarekApp> {
 		};
 	}
 
+  // данные для заказа
   orderData() {
     this.order.id = [];
     this.basket.forEach((item) => {

@@ -11,19 +11,13 @@ interface ISuccessActions {
 
 export class Success extends Component<ISuccess> {
 	protected _close: HTMLButtonElement;
-	protected _total: HTMLElement;
+	protected total: HTMLElement;
 
 	constructor(container: HTMLElement, actions: ISuccessActions) {
 		super(container);
 
-		this._close = ensureElement<HTMLButtonElement>(
-			'.order-success__close',
-			this.container
-		);
-		this._total = ensureElement<HTMLElement>(
-			'.order-success__description',
-			this.container
-		);
+		this._close = ensureElement<HTMLButtonElement>('.order-success__close', this.container);
+		this.total = ensureElement<HTMLElement>('.order-success__description', this.container);
 
 		if (actions?.onClick) {
 			this._close.addEventListener('click', actions.onClick);
@@ -31,6 +25,6 @@ export class Success extends Component<ISuccess> {
 	}
 
 	set result(value: string) {
-		this._total.textContent = `Списано ${value} синапсов`;
+		this.total.textContent = `Списано ${value} синапсов`;
 	}
 }
