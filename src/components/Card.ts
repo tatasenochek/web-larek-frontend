@@ -98,13 +98,10 @@ export class Card extends Component<ICard> {
   }
 
   set price(value: number | null) {
-    if (value !== null) {
-      const priceView = `${value} синапсов`;
-      this.setText(this._price, priceView);
-    } else {
-      console.log(this._button)
-      this.setText(this._price, 'Бесценно');
-    }
+    this.setText(
+      this._price,
+      value !== null ? `${value.toString()} синапсов` : 'Бесценно'
+  );
   }
 
   get price(): number {
