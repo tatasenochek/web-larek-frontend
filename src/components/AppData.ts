@@ -64,46 +64,49 @@ export class AppData extends Model<ILarekApp> {
   }
 
   // обновление поля формы
-  setOrderField(field: keyof IOrderForm, value: string ) {
-    this.order[field] = value;
-    if (this.validateOrder()) {
-        this.events.emit('order:ready', this.order);
-    }
-  }
+  setOrderField(field: keyof IOrderForm, value: string ) { 
+    this.order[field] = value; 
+    if (this.validateOrder()) { 
+        this.events.emit('order:ready', this.order); 
+    } 
+  } 
 
-  setContactField(field: keyof IOrderForm, value: string ) {
-    this.order[field] = value;
-    if (this.validateContact()) {
-        this.events.emit('contact:ready', this.order);
-    }
-  }
+  setContactField(field: keyof IOrderForm, value: string ) { 
+    this.order[field] = value; 
+    if (this.validateContact()) { 
+        this.events.emit('contacts:ready', this.order); 
+    } 
+  } 
 
-  // валидация формы заказа
-  validateOrder() {
-      const errors: typeof this.formErrors = {};
-      if (!this.order.email) {
-          errors.email = 'Необходимо указать email';
-      }
-      if (!this.order.phone) {
-          errors.phone = 'Необходимо указать телефон';
-      }
-      this.formErrors = errors;
-      this.events.emit('formErrors:change', this.formErrors);
-      return Object.keys(errors).length === 0;
-  }
+  validateOrder() { 
+      const errors: typeof this.formErrors = {}; 
+      if (!this.order.payment) { 
+          errors.payment = 'Необходимо выбрать способ оплаты'; 
+      } 
+      if (!this.order.address) { 
+          errors.address = 'Необходимо указать адрес'; 
+      }      
+      this.formErrors = errors; 
+      this.events.emit('formErrors:change', this.formErrors); 
+      return Object.keys(errors).length === 0; 
+  } 
 
-  validateContact() {
-    const errors: typeof this.formErrors = {};
-    if (!this.order.email) {
-        errors.email = 'Необходимо указать email';
-    }
-    if (!this.order.phone) {
-        errors.phone = 'Необходимо указать телефон';
-    }
-    this.formErrors = errors;
-    this.events.emit('formErrors:change', this.formErrors);
-    return Object.keys(errors).length === 0;
-}
+  validateContact() { 
+    const errors: typeof this.formErrors = {}; 
+    if (!this.order.email) { 
+        errors.email = 'Необходимо указать email'; 
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(this.order.email)) {
+        errors.email = 'email должен быть в формате example123@example.example';
+    } 
+    if (!this.order.phone) { 
+        errors.phone = 'Необходимо указать телефон'; 
+    } else if (!/^\+?[0-9]{7,14}$/.test(this.order.phone)) {
+        errors.phone = 'Номер телефона может начинаться с + и состоять толко из цифр';
+    } 
+    this.formErrors = errors; 
+    this.events.emit('formErrors:change', this.formErrors); 
+    return Object.keys(errors).length === 0; 
+  } 
 
   // очистить форму заказа
   resetOrderForm() {

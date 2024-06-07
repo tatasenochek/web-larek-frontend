@@ -1,6 +1,6 @@
 import { IOrder } from "../types";
 import { ensureElement } from "../utils/utils";
-import { IEvents } from "./base/events";
+import { IEvents } from "./base/Events";
 import { Form } from "./common/Form";
 
 
@@ -17,17 +17,13 @@ export class DeliveryOrderForm extends Form<IOrder> {
     this._cash = ensureElement<HTMLButtonElement>('.button.button_alt[name="cash"]', this.container);
     this._address = ensureElement<HTMLInputElement>('input[name="address"]', this.container);
     this._contactButton = ensureElement<HTMLButtonElement>('.button', this.container);
-    
+
     this._card.addEventListener('click', () => {
       this._setPaymentMethod('card');
     });
 
     this._cash.addEventListener('click', () => {
       this._setPaymentMethod('cash');
-    });
-
-    this._contactButton.addEventListener('click', () => {
-      events.emit('order:ready');
     });
   }
 
@@ -54,10 +50,7 @@ export class ContactOrderForm extends Form<IOrder> {
     this._email = ensureElement<HTMLInputElement>('input[name="email"]', this.container);
     this._phone = ensureElement<HTMLInputElement>('input[name="phone"]', this.container);
     this._submitButton = ensureElement<HTMLButtonElement>('.button', this.container);
-    
-    this._submitButton.addEventListener('click', () => {
-      events.emit('order:submit');
-    });
+
   }
 
   set email(value: string) {

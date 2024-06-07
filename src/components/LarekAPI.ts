@@ -1,5 +1,5 @@
 import { ICardItem, IOrder } from "../types";
-import { Api, ApiListResponse } from "./base/api";
+import { Api, ApiListResponse } from "./base/Api";
 
 interface IOrderResult {
 	id: string;

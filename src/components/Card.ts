@@ -67,8 +67,8 @@ export class Card extends Component<ICard> {
   }
 
   set category(value: string) {
-    this._category.textContent = value;
-    this._category.classList.add(category[value]);
+    this.setText(this._category, value);
+    this.toggleClass(this._category, category[value]);
   }
 
   get category(): string {
@@ -110,18 +110,14 @@ export class Card extends Component<ICard> {
 
   set inBasket(value: boolean) {
     if (this._button) {
-      this._button.disabled = value;
-      this._button.textContent = value ? 'В корзине' : 'В корзину';
-      if (value) {
-        this._button.classList.add('in-basket');
-      } else {
-        this._button.classList.remove('in-basket');
-      }
+      this.setDisabled(this._button, value);
+      this.setText(this._button, value ? 'В корзине' : 'В корзину');
+      this.toggleClass(this._button, 'in-basket', value);
     }
   }
 
   set index(value: string) {
-    this._index.textContent = value;
+    this.setText(this._index, value);
   }
 
   get index(): string {
