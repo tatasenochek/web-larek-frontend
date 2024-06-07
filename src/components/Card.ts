@@ -68,7 +68,6 @@ export class Card extends Component<ICard> {
 
   set category(value: string) {
     this.setText(this._category, value);
-    // this._category.classList.add(category[value]);
     this.toggleClass(this._category, category[value], true);
   }
 
