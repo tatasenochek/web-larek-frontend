@@ -1,4 +1,4 @@
-import { FormErrors, ICardItem, ILarekApp, IOrder } from "../types";
+import { EventTypes, FormErrors, ICardItem, ILarekApp, IOrder } from "../types";
 import { Model } from "./base/Model";
 
 export type CatalogChangeEvent = {
@@ -30,20 +30,20 @@ export class AppData extends Model<ILarekApp> {
   addBasket(value: ICardItem) {
     if (!this.basket.some(item => item.id === value.id)) {
       this.basket.push(value);
-      this.emitChanges('basket:changed', this.basket);
+      this.emitChanges(EventTypes.BASKET_CHANGED, this.basket);
     }
   }
 
   // удалить товар из корзины
   removeBasket(value: ICardItem) {
     this.basket = this.basket.filter((item) => item !== value);
-    this.emitChanges('basket:changed', this.basket);
+    this.emitChanges(EventTypes.BASKET_CHANGED, this.basket);
   }
 
   // очистить корзину
   clearBasket() {
     this.basket = [];
-    this.emitChanges('basket:changed', this.basket);
+    this.emitChanges(EventTypes.BASKET_CHANGED, this.basket);
   }
 
   // сумма всех товаров в корзине
@@ -54,27 +54,27 @@ export class AppData extends Model<ILarekApp> {
   // каталог товаров
   setCatalog(items: ICardItem[]) {
       this.catalog = items;
-      this.emitChanges('items:changed', { catalog: this.catalog });
+      this.emitChanges(EventTypes.ITEMS_CHANGED, { catalog: this.catalog });
   }
 
   // предварительный просмотр
   setPreview(item: ICardItem) {
       this.preview = item.id;
-      this.emitChanges('preview:changed', item);
+      this.emitChanges(EventTypes.PREVIEW_CHANGED, item);
   }
 
   // обновление поля формы
   setOrderField(field: keyof IOrderForm, value: string ) { 
     this.order[field] = value; 
     if (this.validateOrder()) { 
-        this.events.emit('order:ready', this.order); 
+        this.events.emit(EventTypes.ORDER_READY, this.order); 
     } 
   } 
 
   setContactField(field: keyof IOrderForm, value: string ) { 
     this.order[field] = value; 
     if (this.validateContact()) { 
-        this.events.emit('contacts:ready', this.order); 
+        this.events.emit(EventTypes.CONTACTS_READY, this.order); 
     } 
   } 
 
@@ -87,7 +87,7 @@ export class AppData extends Model<ILarekApp> {
           errors.address = 'Необходимо указать адрес'; 
       }      
       this.formErrors = errors; 
-      this.events.emit('formErrors:change', this.formErrors); 
+      this.events.emit(EventTypes.FORM_ERRORS_CHANGE, this.formErrors); 
       return Object.keys(errors).length === 0; 
   } 
 
@@ -104,7 +104,7 @@ export class AppData extends Model<ILarekApp> {
         errors.phone = 'Номер телефона может начинаться с + и состоять толко из цифр';
     } 
     this.formErrors = errors; 
-    this.events.emit('formErrors:change', this.formErrors); 
+    this.events.emit(EventTypes.FORM_ERRORS_CHANGE, this.formErrors); 
     return Object.keys(errors).length === 0; 
   } 
 

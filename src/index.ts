@@ -8,7 +8,7 @@ import { Basket } from './components/Basket';
 import { Modal } from './components/common/Modal';
 import { Success } from './components/Success';
 import './scss/styles.scss';
-import { ICardItem, IOrder } from './types';
+import { ICardItem, IOrder, EventTypes } from './types';
 import { API_URL, CDN_URL } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
 
@@ -40,10 +40,10 @@ const contactOrderForm = new ContactOrderForm(cloneTemplate(contactsTemplate), e
 // логика
 
 // Изменились элементы каталога
-events.on<CatalogChangeEvent>('items:changed', () => {
+events.on<CatalogChangeEvent>(EventTypes.ITEMS_CHANGED, () => {
   page.catalog = appData.catalog.map(item => {
     const card = new Card(cloneTemplate(cardCatalogTemplate), {
-      onClick: () => events.emit('card:select', item)
+      onClick: () => events.emit(EventTypes.CARD_SELECT, item)
     });
     return card.render({
       category: item.category,
@@ -55,16 +55,16 @@ events.on<CatalogChangeEvent>('items:changed', () => {
 });
 
 // Открыть карточку
-events.on('card:select', (item: ICardItem) => {
+events.on(EventTypes.CARD_SELECT, (item: ICardItem) => {
   appData.setPreview(item);
 });
 
 // изменена открытая карточка
-events.on('preview:changed', (item: ICardItem) => {
+events.on(EventTypes.PREVIEW_CHANGED, (item: ICardItem) => {
   const card = new Card(cloneTemplate(cardPreviewTemplate), {
     onClick: () => {
       if (!item.inBasket) {
-        events.emit('basket:add', item);
+        events.emit(EventTypes.BASKET_ADD, item);
       }
     }
   });
@@ -84,7 +84,7 @@ events.on('preview:changed', (item: ICardItem) => {
 });
 
 // добавить карточку в корзину
-events.on('basket:add', (item: ICardItem) => {
+events.on(EventTypes.BASKET_ADD, (item: ICardItem) => {
   item.inBasket = true;
   appData.addBasket(item);
   page.counter = appData.basket.length;
@@ -92,18 +92,18 @@ events.on('basket:add', (item: ICardItem) => {
 });
 
 // удалить товар из корзины
-events.on('product:delete', (item: ICardItem) => {
+events.on(EventTypes.PRODUCT_DELETE, (item: ICardItem) => {
   item.inBasket = false;
   appData.removeBasket(item);
   page.counter = appData.basket.length;
 });
 
 // изменения в корзине
-events.on('basket:changed', (items: ICardItem[]) => {
+events.on(EventTypes.BASKET_CHANGED, (items: ICardItem[]) => {
   basket.items = items.map((item, index) => {
     const card = new Card(cloneTemplate(cardBasketTemplate), {
       onClick: () => {
-        events.emit('product:delete', item),
+        events.emit(EventTypes.PRODUCT_DELETE, item),
           (item.inBasket = false),
           appData.removeBasket(item);
         page.counter = appData.basket.length;
@@ -121,14 +121,14 @@ events.on('basket:changed', (items: ICardItem[]) => {
 });
 
 // открыть корзину
-events.on('basket:open', () => {
+events.on(EventTypes.BASKET_OPEN, () => {
   modal.render({
     content: basket.render({}),
   });
 });
 
 // открыть форму заказа
-events.on('order:open', () => {
+events.on(EventTypes.ORDER_OPEN, () => {
   modal.render({
     content: deliveryOrderForm.render({
       payment: 'card',
@@ -140,7 +140,7 @@ events.on('order:open', () => {
 });
 
 // ошибки формы
-events.on('formErrors:change', (errors: Partial<IOrder>) => {
+events.on(EventTypes.FORM_ERRORS_CHANGE, (errors: Partial<IOrder>) => {
   const { payment, address, email, phone } = errors;
 
   deliveryOrderForm.valid = !payment && !address;
@@ -166,11 +166,11 @@ events.on(
 );
 
 // проверка формы заказа
-events.on('order:ready', () => {
+events.on(EventTypes.ORDER_READY, () => {
   deliveryOrderForm.valid = true;
 });
 
-events.on('order:submit', () => {
+events.on(EventTypes.ORDER_SUBMIT, () => {
   modal.render({
     content: contactOrderForm.render({
       email: '',
@@ -182,12 +182,12 @@ events.on('order:submit', () => {
 })
 
 // проверка формы котактов
-events.on('contacts:ready', () => {
+events.on(EventTypes.CONTACTS_READY, () => {
   contactOrderForm.valid = true;
 });
 
 // отправка заказа
-events.on('contacts:submit', () => {
+events.on(EventTypes.CONTACTS_SUBMIT, () => {
   appData.orderData();
   const orderWithItems = {
     ...appData.order,
@@ -216,12 +216,12 @@ events.on('contacts:submit', () => {
 });
 
 // Блокируем прокрутку страницы если открыта модалка 
-events.on('modal:open', () => {
+events.on(EventTypes.MODAL_OPEN, () => {
   page.locked = true;
 });
 
 // ... и разблокируем 
-events.on('modal:close', () => {
+events.on(EventTypes.MODAL_CLOSE, () => {
   page.locked = false;
 });
 

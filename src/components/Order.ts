@@ -16,7 +16,7 @@ export class DeliveryOrderForm extends Form<IOrder> {
     this._card = ensureElement<HTMLButtonElement>('.button.button_alt[name="card"]', this.container);
     this._cash = ensureElement<HTMLButtonElement>('.button.button_alt[name="cash"]', this.container);
     this._address = ensureElement<HTMLInputElement>('input[name="address"]', this.container);
-    this._contactButton = ensureElement<HTMLButtonElement>('.button', this.container);
+    this._contactButton = ensureElement<HTMLButtonElement>('.order__button', this.container);
 
     this._card.addEventListener('click', () => {
       this._setPaymentMethod('card');
